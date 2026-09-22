@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Avora Markets — WhatsApp AI Case Study</title>
+<meta name="description" content="How Avora Markets replaced manual WhatsApp replies with an AI system for 24/7 client support, lead capture and complaint handling — built by ClustRatio.">
+<meta property="og:title" content="Avora Markets — WhatsApp AI Case Study">
+<meta property="og:description" content="Every WhatsApp message answered instantly. See how ClustRatio built Avora Markets' AI automation, from architecture to production reliability.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Avora Markets — WhatsApp AI Case Study">
+<meta name="twitter:description" content="Every WhatsApp message answered instantly — AI automation built by ClustRatio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0E1526;
+    --navy-2:#121A2E;
+    --navy-3:#0B1120;
+    --navy-line: rgba(255,255,255,0.10);
+    --navy-text: rgba(232,235,242,0.78);
+    --paper:#FDFDFB;
+    --panel:#F3F4F1;
+    --line:#E3E2DB;
+    --ink:#161B22;
+    --slate:#5B6472;
+    --green:#1E9E60;
+    --green-bright:#25B673;
+    --green-soft:#E3F4EA;
+    --gold:#B98A3A;
+    --gold-soft:#F6EEDC;
+    --coral:#D9564B;
+    --coral-soft:#FAEAE8;
+    box-sizing: border-box;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; scroll-padding-top: 76px; }
+  body{
+    background: var(--paper); color: var(--ink); font-family:'Public Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  img,svg{max-width:100%; display:block;}
+  .wrap{ max-width: 1180px; margin:0 auto; padding: 0 48px; }
+  a{ color: inherit; }
+  h1,h2,h3,h4{ font-family:'Sora', sans-serif; letter-spacing: -0.01em; }
+
+  /* ---------------- NAV ---------------- */
+  nav.topbar{
+    position: sticky; top:0; z-index: 50; background: rgba(253,253,251,0.92);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+    padding: env(safe-area-inset-top,0px) 0 0 0;
+  }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding: 16px 48px; display:flex; align-items:center; justify-content:space-between; gap: 20px; }
+  .brand{ display:flex; align-items:center; gap:11px; }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .word{ font-family:'Sora', sans-serif; font-weight:700; font-size:16.5px; color: var(--ink); }
+  .brand .built-by{ font-size:11.5px; color: var(--slate); border-left:1px solid var(--line); padding-left:11px; margin-left:2px; }
+  .brand .built-by b{ color: var(--ink); font-weight:600; }
+  @media (max-width:640px){ .brand .built-by{ display:none; } }
+  .nav-links{ display:flex; gap:30px; font-size:14.5px; font-weight:500; color: var(--slate); }
+  .nav-links a{ text-decoration:none; transition: color .15s ease; }
+  .nav-links a:hover{ color: var(--green); }
+  .nav-cta{
+    font-size:13.5px; font-weight:600; border:1px solid var(--ink); border-radius:7px;
+    padding:8px 16px; text-decoration:none; color:var(--ink); white-space:nowrap;
+  }
+  @media (max-width:760px){ .nav-links{display:none;} }
+
+  /* ---------------- HERO ---------------- */
+  .hero{
+    background: radial-gradient(900px 480px at 78% -10%, rgba(30,158,96,0.20), transparent 60%),
+                radial-gradient(700px 460px at 4% 8%, rgba(185,138,58,0.12), transparent 60%),
+                var(--navy);
+    color: #F4F6F9; padding: 84px 0 76px; position:relative; overflow:hidden;
+  }
+  .hero-kicker{ display:flex; align-items:center; gap:10px; font-size:14px; color: rgba(232,235,242,0.62); font-weight:500; }
+  .hero-kicker .dot{ width:7px; height:7px; border-radius:50%; background: var(--green-bright); box-shadow: 0 0 0 4px rgba(37,182,115,0.22); }
+  .hero-grid{ display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items:center; margin-top: 34px; }
+  .hero h1{ font-size: 54px; line-height:1.06; font-weight:700; color:#fff; }
+  .hero h1 .soft{ color: rgba(232,235,242,0.5); font-weight:600; }
+  .hero p.lede{ margin-top:22px; font-size:18.5px; line-height:1.6; color: var(--navy-text); max-width: 490px; }
+  .hero-stats{ display:flex; gap:30px; margin-top:36px; flex-wrap:wrap; }
+  .hero-stats .s{ border-left:2px solid var(--green-bright); padding-left:13px; }
+  .hero-stats .s:nth-child(2){ border-color: var(--gold); }
+  .hero-stats .s:nth-child(3){ border-color: rgba(255,255,255,0.35); }
+  .hero-stats .s .k{ font-size:12px; color: rgba(232,235,242,0.48); letter-spacing:.02em; margin-bottom:5px; }
+  .hero-stats .s .v{ font-family:'Sora',sans-serif; font-size:16px; font-weight:600; color:#F4F6F9; }
+
+  /* Phone mockup shared */
+  .phone{
+    width: 292px; margin: 0 auto; background:#fff; border-radius:34px; padding:9px;
+    box-shadow: 0 34px 70px -22px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
+    background: linear-gradient(180deg,#1B2130,#12161F);
+  }
+  .phone-screen{ background:#EEF1EC; border-radius:26px; overflow:hidden; min-height:400px; display:flex; flex-direction:column; }
+  .phone-bar{ background: var(--green); color:#fff; padding:16px 16px 13px; display:flex; align-items:center; gap:10px; }
+  .phone-bar .av{ width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .phone-bar .who b{ display:block; font-size:14px; font-weight:600; }
+  .phone-bar .who span{ font-size:11.5px; opacity:.85; }
+  .phone-msgs{ padding:16px 12px; display:flex; flex-direction:column; gap:9px; flex:1; }
+  .bub{ max-width:80%; padding:9px 12px; border-radius:13px; font-size:13px; line-height:1.42; }
+  .bub.in{ background:#fff; align-self:flex-start; border-bottom-left-radius:4px; box-shadow:0 1px 1px rgba(0,0,0,0.05); color:#222; }
+  .bub.out{ background: var(--green-soft); align-self:flex-end; border-bottom-right-radius:4px; color:#0E4A2C; }
+  .bub .t{ display:block; font-size:9.5px; opacity:.55; margin-top:4px; text-align:right; }
+  .device-cap{ text-align:center; margin-top:18px; font-size:12.5px; color: rgba(232,235,242,0.55); }
+  .device-cap b{ display:block; color:#fff; font-family:'Public Sans',sans-serif; font-weight:600; font-size:14px; margin-bottom:3px; }
+
+  /* ---------------- SECTION SCAFFOLD ---------------- */
+  section{ padding: 78px 0; }
+  section.light{ background: var(--paper); border-bottom:1px solid var(--line); }
+  section.panel{ background: var(--panel); border-bottom:1px solid var(--line); }
+  section.dark{ background: var(--navy-2); color: var(--navy-text); border-bottom: 1px solid var(--navy-line); }
+  section.dark.alt{ background: var(--navy-3); }
+  .eyebrow{ font-size:13.5px; font-weight:600; color: var(--green); }
+  section.dark .eyebrow{ color: var(--green-bright); }
+  .sec-head{ max-width:620px; margin-bottom:44px; }
+  .sec-head h2{ font-size:32px; font-weight:700; margin-top:10px; color: var(--ink); }
+  section.dark .sec-head h2{ color:#fff; }
+  .sec-head p{ margin-top:14px; font-size:16.5px; line-height:1.6; color: var(--slate); }
+  section.dark .sec-head p{ color: var(--navy-text); }
+
+  /* ---------------- CHALLENGE / SOLUTION ---------------- */
+  .split{ display:grid; grid-template-columns: 1fr 1fr; gap:44px; }
+  .split .col{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:30px 30px 32px; }
+  .split .col.solution{ background: var(--green-soft); border-color:#CDEBDA; }
+  .split .tag{ display:inline-block; font-size:12.5px; font-weight:600; padding:5px 12px; border-radius:100px; }
+  .split .col.problem .tag{ background: var(--coral-soft); color:#A63B32; }
+  .split .col.solution .tag{ background:#fff; color: var(--green); border:1px solid #CDEBDA; }
+  .split h3{ font-size:21px; margin-top:16px; font-weight:700; }
+  .split p{ margin-top:12px; font-size:15.5px; line-height:1.65; color:#3B4250; }
+
+  /* ---------------- HOW IT WORKS ---------------- */
+  .how-grid{ display:grid; grid-template-columns: 1fr 1.1fr; gap:60px; align-items:center; }
+  .steps{ display:flex; flex-direction:column; gap:0; }
+  .step{ display:flex; gap:18px; padding:17px 0; border-bottom:1px solid var(--line); }
+  .step:last-child{ border-bottom:none; }
+  .step .n{ font-family:'Sora',sans-serif; font-weight:700; font-size:15px; color: var(--green); width:26px; flex-shrink:0; }
+  .step h4{ font-size:15.5px; font-weight:600; }
+  .step p{ margin-top:4px; font-size:14.5px; color: var(--slate); line-height:1.55; }
+
+  /* ---------------- BENEFITS GRID ---------------- */
+  .benefit-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:26px; }
+  .benefit{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:26px 24px; }
+  .benefit .ic{ width:38px; height:38px; border-radius:10px; background: var(--green-soft); display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .benefit .ic svg{ width:20px; height:20px; }
+  .benefit h4{ font-size:16px; font-weight:700; }
+  .benefit p{ margin-top:8px; font-size:14.5px; line-height:1.55; color: var(--slate); }
+  @media (max-width:900px){ .benefit-grid{ grid-template-columns: 1fr 1fr; } }
+
+  /* ---------------- ARCHITECTURE DIAGRAM ---------------- */
+  .diagram-card{ background: rgba(255,255,255,0.03); border:1px solid var(--navy-line); border-radius:16px; padding: 30px 26px 22px; }
+  .diagram-card svg{ width:100%; height:auto; }
+  .stack-chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:26px; }
+  .chip{ font-family:'IBM Plex Mono', monospace; font-size:12px; background: rgba(255,255,255,0.06); border:1px solid var(--navy-line); color: rgba(232,235,242,0.85); padding:6px 12px; border-radius:7px; }
+
+  .two-col{ display:grid; grid-template-columns: 1fr 1fr; gap:50px; align-items:start; margin-top: 54px; }
+  .rag-note{ font-size:15px; line-height:1.65; color: var(--navy-text); }
+  .rag-note b{ color:#fff; }
+
+  /* ---------------- RELIABILITY ---------------- */
+  .proof-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:20px; margin-top:44px; }
+  .proof{ background: rgba(255,255,255,0.03); border:1px solid var(--navy-line); border-radius:13px; padding:22px 21px; }
+  .proof .k{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color: var(--gold); margin-bottom:10px; }
+  .proof h4{ font-size:15px; font-weight:700; color:#fff; }
+  .proof p{ margin-top:8px; font-size:13.8px; line-height:1.55; color: var(--navy-text); }
+  @media (max-width:900px){ .proof-grid{grid-template-columns:1fr;} }
+
+  .spec-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background: var(--navy-line); border:1px solid var(--navy-line); border-radius:12px; overflow:hidden; margin-top:54px; }
+  .spec{ background: var(--navy-2); padding:18px 18px; }
+  .spec .k{ font-size:11.5px; color: rgba(232,235,242,0.45); margin-bottom:6px; }
+  .spec .v{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:#F4F6F9; }
+  @media (max-width:900px){ .spec-grid{ grid-template-columns: repeat(2,1fr);} }
+
+  /* ---------------- CRM ---------------- */
+  .crm-layout{ display:grid; grid-template-columns: 1fr 1fr; gap:44px; align-items:center; }
+  .crm-cards{ display:flex; flex-direction:column; gap:14px; }
+  .crm-card{ display:flex; gap:14px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; align-items:flex-start; }
+  .crm-dot{ width:11px; height:11px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .crm-card h4{ font-size:15px; font-weight:700; }
+  .crm-card p{ margin-top:4px; font-size:13.8px; color: var(--slate); line-height:1.5; }
+  .crm-dash{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 24px 16px; }
+  .crm-dash-head{ display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:600; color: var(--ink); margin-bottom:6px; }
+  .crm-live{ font-size:11px; font-weight:600; color: var(--green); background: var(--green-soft); padding:3px 9px; border-radius:100px; }
+  .crm-dash-cap{ text-align:center; font-size:12px; color: var(--slate); margin-top:4px; }
+
+  /* ---------------- DELIVERED / FOOTER ---------------- */
+  .deliver-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:56px; align-items:start; }
+  .deliver-list{ list-style:none; display:flex; flex-direction:column; gap:13px; }
+  .deliver-list li{ display:flex; gap:11px; font-size:15px; align-items:flex-start; }
+  .deliver-list li svg{ width:18px; height:18px; flex-shrink:0; margin-top:2px; color: var(--green); }
+  .closing h3{ font-size:24px; font-weight:700; line-height:1.35; }
+  .closing p{ margin-top:14px; font-size:15.5px; color: var(--slate); line-height:1.6; }
+
+  section.cta{ background: var(--navy); border-bottom:1px solid var(--navy-line); padding: 64px 0; }
+  .cta-inner{ display:flex; justify-content:space-between; align-items:center; gap:36px; flex-wrap:wrap; }
+  .cta-inner h3{ font-size:25px; color:#fff; font-weight:700; max-width:440px; line-height:1.32; }
+  .cta-inner p{ margin-top:10px; font-size:14.5px; color: var(--navy-text); max-width:420px; line-height:1.55; }
+  .cta-actions{ display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+  .cta-btn{ display:flex; align-items:center; gap:9px; text-decoration:none; font-size:14.5px; font-weight:600; padding:11px 18px; border-radius:9px; border:1px solid rgba(255,255,255,0.16); color:#F4F6F9; white-space:nowrap; transition: background .15s ease; }
+  .cta-btn:hover{ background: rgba(255,255,255,0.06); }
+  .cta-btn.primary{ background: var(--green); border-color: var(--green); color:#fff; }
+  .cta-btn.primary:hover{ background: var(--green-bright); }
+  @media (max-width:640px){ .cta-actions{ width:100%; } .cta-btn{ width:100%; justify-content:center; } }
+
+  footer{ background: var(--navy-3); color: rgba(232,235,242,0.5); padding: 30px 0 calc(30px + env(safe-area-inset-bottom,0px)); }
+  .foot-inner{ display:flex; justify-content:space-between; align-items:center; font-size:13px; flex-wrap:wrap; gap:10px; }
+
+  /* ---------------- RESPONSIVE ---------------- */
+  @media (max-width: 940px){
+    .wrap{ padding:0 24px; }
+    .nav-inner{ padding:14px 24px; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero h1{ font-size:38px; }
+    .split{ grid-template-columns:1fr; }
+    .how-grid{ grid-template-columns:1fr; }
+    .benefit-grid{ grid-template-columns:1fr; }
+    .two-col{ grid-template-columns:1fr; }
+    .deliver-grid{ grid-template-columns:1fr; }
+    section{ padding:56px 0; }
+  }
+  code, pre{ font-family:'IBM Plex Mono', monospace; }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="nav-inner">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 30 30" fill="none">
+        <rect width="30" height="30" rx="8" fill="#1E9E60"/>
+        <path d="M9 11.5c0-1.4 1.1-2.5 2.5-2.5h7c1.4 0 2.5 1.1 2.5 2.5v4c0 1.4-1.1 2.5-2.5 2.5h-4.3L11 20.5V18h-.5C9.6 18 9 17.4 9 16.5v-5z" fill="#fff"/>
+      </svg>
+      <span class="word">Avora Markets</span>
+      <span class="built-by">Built by <b>ClustRatio</b></span>
+    </div>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#how">How it works</a>
+      <a href="#benefits">Benefits</a>
+      <a href="#hood">Under the hood</a>
+      <a href="#reliability">Reliability</a>
+      <a href="#crm">CRM</a>
+    </div>
+    <a class="nav-cta" href="#delivered">What we delivered</a>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<header class="hero" id="overview">
+  <div class="wrap">
+    <div class="hero-kicker"><span class="dot"></span>WhatsApp AI automation · Case study</div>
+    <div class="hero-grid">
+      <div>
+        <h1>Nobody waits<br>on WhatsApp<span class="soft"> anymore.</span></h1>
+        <p class="lede">Avora Markets, a trading &amp; brokerage platform, now answers every client message on WhatsApp instantly — using an AI system built end-to-end for how a real trading desk actually operates.</p>
+        <div class="hero-stats">
+          <div class="s"><div class="k">Client</div><div class="v">Avora Markets</div></div>
+          <div class="s"><div class="k">Channel</div><div class="v">WhatsApp</div></div>
+          <div class="s"><div class="k">Status</div><div class="v">Live in production</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-bar">
+              <div class="av">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v6c0 5-3 7.5-7 10-4-2.5-7-5-7-10V6l7-4z"/></svg>
+              </div>
+              <div class="who"><b>Avora Assistant</b><span>Usually replies instantly</span></div>
+            </div>
+            <div class="phone-msgs">
+              <div class="bub in">Hi, what's the minimum deposit for a Standard account?<span class="t">10:42</span></div>
+              <div class="bub out">Hey! The minimum deposit for a Standard account is $100. Want me to walk you through opening one?<span class="t">10:42</span></div>
+              <div class="bub in">Yes please<span class="t">10:43</span></div>
+              <div class="bub out">Done — I've sent the account opening link to this number. Ping me if anything's unclear along the way.<span class="t">10:43</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="device-cap"><b>Illustrative conversation</b>Recreated for this case study, not a real client exchange</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== CHALLENGE / SOLUTION ========== -->
+<section class="light">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">The situation</div>
+      <h2>Trading doesn't pause. WhatsApp shouldn't either.</h2>
+    </div>
+    <div class="split">
+      <div class="col problem">
+        <span class="tag">Before</span>
+        <h3>Manual replies couldn't keep up</h3>
+        <p>Client questions about deposits, accounts and open issues came in on WhatsApp around the clock. A small team could only be online so many hours a day — so replies were delayed, leads went cold waiting for a response, and complaints sat mixed in with everyday questions instead of getting the attention they needed.</p>
+      </div>
+      <div class="col solution">
+        <span class="tag">After</span>
+        <h3>An AI layer that never clocks off</h3>
+        <p>An AI system now sits between WhatsApp and Avora's team. It reads every message the moment it lands, pulls the right information before answering, and replies in a natural, paced way — while complaints are automatically routed down a separate path so nothing serious gets missed in the noise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="panel" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">How it works</div>
+      <h2>From message to reply, in five moves</h2>
+      <p>No jargon here — this is the same journey a client's message takes, described plainly.</p>
+    </div>
+    <div class="how-grid">
+      <div class="steps">
+        <div class="step"><div class="n">01</div><div><h4>A client messages Avora on WhatsApp</h4><p>Any question, any time — deposits, accounts, a complaint, anything.</p></div></div>
+        <div class="step"><div class="n">02</div><div><h4>The system reads it the instant it arrives</h4><p>No one has to be at their desk for the message to be picked up.</p></div></div>
+        <div class="step"><div class="n">03</div><div><h4>It checks the right knowledge first</h4><p>Rather than a canned script, it looks up what's actually relevant before replying.</p></div></div>
+        <div class="step"><div class="n">04</div><div><h4>An AI drafts a natural response</h4><p>Written to sound like a person, and paced so it doesn't read as an instant machine reply.</p></div></div>
+        <div class="step"><div class="n">05</div><div><h4>The reply lands back on WhatsApp</h4><p>Same conversation thread, no app-switching for the client.</p></div></div>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-bar">
+              <div class="av"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+              <div class="who"><b>Avora Assistant</b><span>Active now</span></div>
+            </div>
+            <div class="phone-msgs">
+              <div class="bub in">My last withdrawal hasn't shown up yet, it's been 3 days<span class="t">14:02</span></div>
+              <div class="bub out">Sorry about the wait — I'm flagging this as a priority complaint so our support team looks at it directly, not just a general query.<span class="t">14:02</span></div>
+              <div class="bub out">You'll hear from a specialist shortly with an update.<span class="t">14:02</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="device-cap"><b>Complaints get routed, not lost</b>A dedicated path separates urgent issues from everyday questions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BENEFITS ========== -->
+<section class="light" id="benefits">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Why it matters</div>
+      <h2>What this actually changes for Avora</h2>
+    </div>
+    <div class="benefit-grid">
+      <div class="benefit">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+        <h4>Always-on coverage</h4>
+        <p>Messages get answered nights, weekends and holidays — not just during business hours.</p>
+      </div>
+      <div class="benefit">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <h4>No cold leads from delay</h4>
+        <p>A prospect asking about accounts gets a useful answer immediately, while interest is still warm.</p>
+      </div>
+      <div class="benefit">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <h4>Answers from real knowledge</h4>
+        <p>Replies are grounded in Avora's own material, retrieved per question — not a fixed script.</p>
+      </div>
+      <div class="benefit">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+        <h4>Complaints reach a human</h4>
+        <p>A dedicated flow separates real issues from routine questions, so nothing urgent sits in a queue.</p>
+      </div>
+      <div class="benefit">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.97-4.03 9-9 9-1.6 0-3.1-.42-4.4-1.15L3 21l1.15-3.6A8.96 8.96 0 013 12c0-4.97 4.03-9 9-9s9 4.03 9 9z"/></svg></div>
+        <h4>Feels like a conversation</h4>
+        <p>Response pacing is tuned so it reads like a person typing, not an instant machine reply.</p>
+      </div>
+      <div class="benefit">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h4>Nothing lost on a restart</h4>
+        <p>Conversations and login sessions survive updates and reboots — clients never see a "scan again" moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== UNDER THE HOOD: ARCHITECTURE ========== -->
+<section class="dark" id="hood">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Under the hood</div>
+      <h2>Five layers, one message path</h2>
+      <p>For the technical reader: how a WhatsApp message actually moves through the system, end to end.</p>
+    </div>
+
+    <div class="diagram-card">
+      <svg viewBox="0 0 1080 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="rgba(232,235,242,0.35)"/>
+          </marker>
+        </defs>
+        <!-- connecting line -->
+        <line x1="145" y1="130" x2="935" y2="130" stroke="rgba(232,235,242,0.18)" stroke-width="1.5" stroke-dasharray="4 5"/>
+        <!-- nodes -->
+        <!-- 1 Channel -->
+        <g>
+          <rect x="20" y="70" width="180" height="120" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(232,235,242,0.18)"/>
+          <circle cx="60" cy="105" r="14" fill="#1E9E60"/>
+          <path d="M53 105l5 5 9-10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="42" y="140" fill="#fff" font-family="Sora, sans-serif" font-size="14" font-weight="600">Channel</text>
+          <text x="42" y="160" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">OpenWA +</text>
+          <text x="42" y="176" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">WhatsApp Web.js</text>
+        </g>
+        <!-- 2 Application -->
+        <g>
+          <rect x="230" y="70" width="180" height="120" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(232,235,242,0.18)"/>
+          <circle cx="270" cy="105" r="14" fill="#B98A3A"/>
+          <rect x="264" y="99" width="12" height="12" rx="2" fill="#fff"/>
+          <text x="252" y="140" fill="#fff" font-family="Sora, sans-serif" font-size="14" font-weight="600">Application</text>
+          <text x="252" y="160" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">Avora Node.js</text>
+          <text x="252" y="176" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">/ Express</text>
+        </g>
+        <!-- 3 AI / Knowledge -->
+        <g>
+          <rect x="440" y="70" width="180" height="120" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(232,235,242,0.18)"/>
+          <circle cx="480" cy="105" r="14" fill="#1E9E60"/>
+          <path d="M474 111l4-12 4 8 4-8 4 12" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="462" y="140" fill="#fff" font-family="Sora, sans-serif" font-size="14" font-weight="600">AI / Knowledge</text>
+          <text x="462" y="160" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">Chunks + embeddings</text>
+          <text x="462" y="176" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">+ Gemini</text>
+        </g>
+        <!-- 4 Runtime -->
+        <g>
+          <rect x="650" y="70" width="180" height="120" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(232,235,242,0.18)"/>
+          <circle cx="690" cy="105" r="14" fill="#B98A3A"/>
+          <rect x="682" y="97" width="16" height="16" rx="3" fill="#fff"/>
+          <text x="672" y="140" fill="#fff" font-family="Sora, sans-serif" font-size="14" font-weight="600">Runtime</text>
+          <text x="672" y="160" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">Docker +</text>
+          <text x="672" y="176" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">avora-network</text>
+        </g>
+        <!-- 5 Cloud / Delivery -->
+        <g>
+          <rect x="860" y="70" width="200" height="120" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(232,235,242,0.18)"/>
+          <circle cx="900" cy="105" r="14" fill="#1E9E60"/>
+          <path d="M893 108a6 6 0 010-8 7 7 0 0113-3 5 5 0 01-1 10h-11z" stroke="#fff" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          <text x="882" y="140" fill="#fff" font-family="Sora, sans-serif" font-size="14" font-weight="600">Cloud &amp; delivery</text>
+          <text x="882" y="160" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">GCP VM + Nginx +</text>
+          <text x="882" y="176" fill="rgba(232,235,242,0.6)" font-family="Public Sans, sans-serif" font-size="12">GitHub Actions</text>
+        </g>
+        <!-- arrows between -->
+        <line x1="200" y1="130" x2="228" y2="130" stroke="rgba(232,235,242,0.4)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="410" y1="130" x2="438" y2="130" stroke="rgba(232,235,242,0.4)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="620" y1="130" x2="648" y2="130" stroke="rgba(232,235,242,0.4)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="830" y1="130" x2="858" y2="130" stroke="rgba(232,235,242,0.4)" stroke-width="1.6" marker-end="url(#arrow)"/>
+      </svg>
+      <div class="stack-chips">
+        <span class="chip">OpenWA · port 2785</span>
+        <span class="chip">Node.js / Express</span>
+        <span class="chip">Gemini API</span>
+        <span class="chip">Docker + avora-network</span>
+        <span class="chip">GCP Compute Engine</span>
+        <span class="chip">Nginx</span>
+        <span class="chip">GitHub Actions + SSH</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="color:#fff; font-size:19px; font-weight:700; margin-bottom:14px;">Answers are retrieved, not guessed</h3>
+        <p class="rag-note">Rather than sending an entire knowledge base to the model on every message, source content is broken into <b>chunks</b>, converted to <b>embeddings</b>, and the relevant pieces are <b>retrieved</b> just before generation. Only that relevant context reaches Gemini — which is what keeps answers accurate instead of generic.</p>
+      </div>
+      <div class="diagram-card" style="padding:22px 20px;">
+        <svg viewBox="0 0 520 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="rgba(232,235,242,0.35)"/>
+            </marker>
+          </defs>
+          <g font-family="Public Sans, sans-serif" font-size="11.5" fill="rgba(232,235,242,0.82)">
+            <rect x="0" y="35" width="88" height="50" rx="9" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+            <text x="44" y="64" text-anchor="middle">Source</text>
+            <rect x="108" y="35" width="88" height="50" rx="9" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+            <text x="152" y="64" text-anchor="middle">Chunks</text>
+            <rect x="216" y="35" width="88" height="50" rx="9" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+            <text x="260" y="58" text-anchor="middle">Embed-</text>
+            <text x="260" y="72" text-anchor="middle">dings</text>
+            <rect x="324" y="35" width="88" height="50" rx="9" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+            <text x="368" y="64" text-anchor="middle">Retrieval</text>
+            <rect x="432" y="35" width="88" height="50" rx="9" fill="rgba(30,158,96,0.18)" stroke="#1E9E60"/>
+            <text x="476" y="64" text-anchor="middle" fill="#fff">Gemini</text>
+          </g>
+          <line x1="88" y1="60" x2="106" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow2)"/>
+          <line x1="196" y1="60" x2="214" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow2)"/>
+          <line x1="304" y1="60" x2="322" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow2)"/>
+          <line x1="412" y1="60" x2="430" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow2)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== RELIABILITY ========== -->
+<section class="dark alt" id="reliability">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Reliability</div>
+      <h2>Ships without downtime, hardened by real incidents</h2>
+      <p>Every release moves through a blue/green handoff — a new version is proven healthy before it ever sees traffic.</p>
+    </div>
+
+    <div class="diagram-card">
+      <svg viewBox="0 0 1080 130" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="rgba(232,235,242,0.35)"/>
+          </marker>
+        </defs>
+        <g font-family="Public Sans, sans-serif" font-size="12" fill="#fff">
+          <rect x="0" y="30" width="138" height="60" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+          <text x="69" y="65" text-anchor="middle">Git push</text>
+          <rect x="158" y="30" width="150" height="60" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+          <text x="233" y="58" text-anchor="middle">GitHub</text>
+          <text x="233" y="73" text-anchor="middle">Actions</text>
+          <rect x="328" y="30" width="130" height="60" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+          <text x="393" y="65" text-anchor="middle">SSH to VM</text>
+          <rect x="478" y="30" width="150" height="60" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(232,235,242,0.18)"/>
+          <text x="553" y="58" text-anchor="middle">Build new</text>
+          <text x="553" y="73" text-anchor="middle">slot (8081)</text>
+          <rect x="648" y="30" width="150" height="60" rx="10" fill="rgba(185,138,58,0.18)" stroke="#B98A3A"/>
+          <text x="723" y="58" text-anchor="middle">Health</text>
+          <text x="723" y="73" text-anchor="middle">check</text>
+          <rect x="818" y="30" width="130" height="60" rx="10" fill="rgba(30,158,96,0.18)" stroke="#1E9E60"/>
+          <text x="883" y="58" text-anchor="middle">Nginx</text>
+          <text x="883" y="73" text-anchor="middle">switch</text>
+          <rect x="968" y="30" width="110" height="60" rx="10" fill="rgba(217,86,75,0.16)" stroke="#D9564B"/>
+          <text x="1023" y="58" text-anchor="middle">Retire</text>
+          <text x="1023" y="73" text-anchor="middle">old slot</text>
+        </g>
+        <line x1="138" y1="60" x2="156" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow3)"/>
+        <line x1="308" y1="60" x2="326" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow3)"/>
+        <line x1="458" y1="60" x2="476" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow3)"/>
+        <line x1="628" y1="60" x2="646" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow3)"/>
+        <line x1="798" y1="60" x2="816" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow3)"/>
+        <line x1="948" y1="60" x2="966" y2="60" stroke="rgba(232,235,242,0.4)" marker-end="url(#arrow3)"/>
+      </svg>
+    </div>
+
+    <div class="proof-grid">
+      <div class="proof">
+        <div class="k">Incident · resolved</div>
+        <h4>Ephemeral IP broke CI/CD</h4>
+        <p>A VM restart changed the external IP, so deploys couldn't reach it over SSH. Traced to a stale secret, fixed by updating it — and it's now a known part of the deployment checklist.</p>
+      </div>
+      <div class="proof">
+        <div class="k">Incident · resolved</div>
+        <h4>Two live slots, one conflict</h4>
+        <p>Running both deployment slots at once caused a polling conflict. Fixed with a strict handoff: new slot health-checked, traffic switched, old slot retired — never both live for long.</p>
+      </div>
+      <div class="proof">
+        <div class="k">Incident · resolved</div>
+        <h4>Memory pressure under load</h4>
+        <p>The WhatsApp session layer needed more headroom than first provisioned. Diagnosed with resource monitoring, fixed by scaling the VM and raising the container's memory limit.</p>
+      </div>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec"><div class="k">Cloud</div><div class="v">GCP Compute Engine</div></div>
+      <div class="spec"><div class="k">OS</div><div class="v">Ubuntu 24.04</div></div>
+      <div class="spec"><div class="k">Edge</div><div class="v">Nginx · port 80</div></div>
+      <div class="spec"><div class="k">App slots</div><div class="v">8080 / 8081</div></div>
+      <div class="spec"><div class="k">Channel service</div><div class="v">OpenWA · port 2785</div></div>
+      <div class="spec"><div class="k">Sessions</div><div class="v">Persistent volume</div></div>
+      <div class="spec"><div class="k">Health check</div><div class="v">GET /health</div></div>
+      <div class="spec"><div class="k">Delivery</div><div class="v">GitHub Actions + SSH</div></div>
+    </div>
+    <p style="margin-top:22px; font-size:13.5px; color:rgba(232,235,242,0.5); max-width:640px;">Kubernetes (Pods, Services, Ingress) was explored as a scaling track alongside this build — the production system documented here runs on Docker and a GCP VM.</p>
+  </div>
+</section>
+
+<!-- ========== CRM / DATA ========== -->
+<section class="panel" id="crm">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Data &amp; visibility</div>
+      <h2>Every WhatsApp interaction, organized in one CRM</h2>
+      <p>A reply is only half the job. Whatever a client shares on WhatsApp — registering, referring someone, or raising a complaint — is captured and categorized, so the team sees it in one place instead of scrolling through chat history.</p>
+    </div>
+    <div class="crm-layout">
+      <div class="crm-cards">
+        <div class="crm-card">
+          <div class="crm-dot" style="background:var(--green);"></div>
+          <div>
+            <h4>Registrations</h4>
+            <p>New account interest captured from the conversation and logged as a record, not just a chat thread.</p>
+          </div>
+        </div>
+        <div class="crm-card">
+          <div class="crm-dot" style="background:var(--gold);"></div>
+          <div>
+            <h4>Referrals</h4>
+            <p>When one client refers another, it's tracked back to who sent it — visible in the CRM, not lost in a message.</p>
+          </div>
+        </div>
+        <div class="crm-card">
+          <div class="crm-dot" style="background:var(--coral);"></div>
+          <div>
+            <h4>Complaints</h4>
+            <p>Flagged and categorized separately, so a support lead can see open issues at a glance.</p>
+          </div>
+        </div>
+      </div>
+      <div class="crm-dash">
+        <div class="crm-dash-head">
+          <span>WhatsApp intake</span>
+          <span class="crm-live">Live</span>
+        </div>
+        <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="85" r="58" fill="none" stroke="#EDECE6" stroke-width="18"/>
+          <circle cx="80" cy="85" r="58" fill="none" stroke="#1E9E60" stroke-width="18" stroke-dasharray="220 364" stroke-linecap="round" transform="rotate(-90 80 85)"/>
+          <circle cx="80" cy="85" r="58" fill="none" stroke="#B98A3A" stroke-width="18" stroke-dasharray="90 364" stroke-dashoffset="-220" stroke-linecap="round" transform="rotate(-90 80 85)"/>
+          <circle cx="80" cy="85" r="58" fill="none" stroke="#D9564B" stroke-width="18" stroke-dasharray="54 364" stroke-dashoffset="-310" stroke-linecap="round" transform="rotate(-90 80 85)"/>
+          <g font-family="Public Sans, sans-serif" font-size="11.5" fill="#5B6472">
+            <circle cx="180" cy="46" r="5" fill="#1E9E60"/><text x="192" y="50">Registrations</text>
+            <circle cx="180" cy="82" r="5" fill="#B98A3A"/><text x="192" y="86">Referrals</text>
+            <circle cx="180" cy="118" r="5" fill="#D9564B"/><text x="192" y="122">Complaints</text>
+          </g>
+        </svg>
+        <div class="crm-dash-cap">Illustrative dashboard view — not live client data</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DELIVERED ========== -->
+<section class="light" id="delivered">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Delivered</div>
+      <h2>What shipped</h2>
+    </div>
+    <div class="deliver-grid">
+      <ul class="deliver-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>WhatsApp AI chatbot, powered by Gemini with retrieval-backed answers</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Lead-capture conversation flow plus a dedicated complaint-handling path</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Dockerized deployment on GCP with zero-downtime blue/green releases</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Persistent WhatsApp session handling across restarts</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>CI/CD pipeline via GitHub Actions, deploying from the client's own repository</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Health-checked, production-hardened infrastructure</li>
+      </ul>
+      <div class="closing">
+        <h3>Built to answer, from the first message to the thousandth.</h3>
+        <p>Avora Markets now runs its WhatsApp channel on a system that reads context before it replies, hands off complaints instead of burying them, and deploys new versions without a client ever seeing a gap.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap cta-inner">
+    <div>
+      <h3>Want something like this for your business?</h3>
+      <p>ClustRatio builds WhatsApp AI automation end to end — from the conversation flow to the infrastructure behind it.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="cta-btn primary" href="https://wa.me/919025896796" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3V4z"/></svg>
+        Message on WhatsApp
+      </a>
+      <a class="cta-btn" href="mailto:support@scanlify.store">support@scanlify.store</a>
+      <a class="cta-btn" href="tel:+919025896796">+91 90258 96796</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>Case study prepared by ClustRatio for portfolio use.</span>
+    <span>Credentials, keys and session data intentionally omitted.</span>
+  </div>
+</footer>
+
+</body>
+</html>
